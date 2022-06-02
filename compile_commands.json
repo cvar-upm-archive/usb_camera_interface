@@ -1,0 +1,12 @@
+[
+{
+  "directory": "/home/miguel/aerostack2_ws/src/aerostack2/stack/hardware_interface/usb_camera_interface/build/linux-debug",
+  "command": "/usr/bin/c++  -DDEFAULT_RMW_IMPLEMENTATION=rmw_cyclonedds_cpp -DRCUTILS_ENABLE_FAULT_INJECTION -I/home/miguel/aerostack2_ws/src/aerostack2/stack/hardware_interface/usb_camera_interface/include -I/home/miguel/aerostack2_ws/src/aerostack2/stack/hardware_interface/usb_camera_interface/include/usb_camera_interface -isystem /home/miguel/aerostack2_ws/install/as2_core/include -isystem /home/miguel/aerostack2_ws/install/as2_msgs/include -isystem /opt/ros/galactic/include -isystem /usr/include/eigen3 -isystem /usr/include/opencv4  -g   -std=gnu++17 -o CMakeFiles/usb_camera_interface_node.dir/src/usb_camera_interface_node.cpp.o -c /home/miguel/aerostack2_ws/src/aerostack2/stack/hardware_interface/usb_camera_interface/src/usb_camera_interface_node.cpp",
+  "file": "/home/miguel/aerostack2_ws/src/aerostack2/stack/hardware_interface/usb_camera_interface/src/usb_camera_interface_node.cpp"
+},
+{
+  "directory": "/home/miguel/aerostack2_ws/src/aerostack2/stack/hardware_interface/usb_camera_interface/build/linux-debug",
+  "command": "/usr/bin/c++  -DDEFAULT_RMW_IMPLEMENTATION=rmw_cyclonedds_cpp -DRCUTILS_ENABLE_FAULT_INJECTION -I/home/miguel/aerostack2_ws/src/aerostack2/stack/hardware_interface/usb_camera_interface/include -I/home/miguel/aerostack2_ws/src/aerostack2/stack/hardware_interface/usb_camera_interface/include/usb_camera_interface -isystem /home/miguel/aerostack2_ws/install/as2_core/include -isystem /home/miguel/aerostack2_ws/install/as2_msgs/include -isystem /opt/ros/galactic/include -isystem /usr/include/eigen3 -isystem /usr/include/opencv4  -g   -std=gnu++17 -o CMakeFiles/usb_camera_interface_node.dir/src/usb_camera_interface.cpp.o -c /home/miguel/aerostack2_ws/src/aerostack2/stack/hardware_interface/usb_camera_interface/src/usb_camera_interface.cpp",
+  "file": "/home/miguel/aerostack2_ws/src/aerostack2/stack/hardware_interface/usb_camera_interface/src/usb_camera_interface.cpp"
+}
+]
