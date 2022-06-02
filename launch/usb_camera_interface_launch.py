@@ -9,9 +9,9 @@ import yaml
 
 def staticTransformNode(context, *args, **kwargs):
 
-    config = os.path.join(get_package_share_directory('aruco_gate_detector'),
+    config = os.path.join(get_package_share_directory('usb_camera_interface'),
                           'config/tf_cam',
-                          'sim_arguments.yaml')
+                          'real_arguments.yaml')
 
     with open(config, 'r') as config_file:
         tf_arguments = yaml.load(config_file, Loader=yaml.FullLoader)
@@ -44,24 +44,24 @@ def staticTransformNode(context, *args, **kwargs):
 
 def generate_launch_description(ns='drone0'):
 
-    config = os.path.join(get_package_share_directory('aruco_gate_detector'),
-                          'config/aruco_gate_detector',
-                          'sim_params.yaml')
+    config = os.path.join(get_package_share_directory('usb_camera_interface'),
+                          'config/usb_camera_interface',
+                          'params.yaml')
 
     return LaunchDescription([
         DeclareLaunchArgument('drone_id', default_value='drone0'),
         DeclareLaunchArgument('log_level', default_value='info'),
         Node(
-            package='aruco_gate_detector',
-            executable='aruco_gate_detector_node',
-            name='aruco_gate_detector',
+            package='usb_camera_interface',
+            executable='usb_camera_interface_node',
+            name='usb_camera_interface',
             namespace=LaunchConfiguration('drone_id'),
             parameters=[config],
             output='screen',
             emulate_tty=True,
-            remappings=[
-                ("sensor_measurements/camera/image_raw", "camera1/image_raw")]
+            # remappings=[
+            #     ("sensor_measurements/camera/image_raw", "camera1/image_raw")]
         ),
 
-        OpaqueFunction(function=staticTransformNode)
+        # OpaqueFunction(function=staticTransformNode)
     ])

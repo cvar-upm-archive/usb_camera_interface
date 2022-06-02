@@ -68,17 +68,23 @@ public:
 
 private:
   std::shared_ptr<as2::sensors::Camera> img_transport_;
+
   std::string device_port_;
+  std::string camera_name_;
+  int image_width_;
+  int image_height_;
+  double framerate_;
 
   cv::Mat camera_matrix_;
   cv::Mat dist_coeffs_;
+  std::string distortion_model_;
+
   cv::VideoCapture cap_;
 
   void setCameraInfo(const cv::Mat &_camera_matrix, const cv::Mat &_dist_coeffs);
   void loadParameters();
   void captureImage();
   void setupCamera();
-
 };
 
 #endif // ARUCO_GATE_DETECTOR_HPP_

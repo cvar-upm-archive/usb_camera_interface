@@ -31,22 +31,15 @@
  ********************************************************************************/
 
 #include "usb_camera_interface.hpp"
-#include <memory>
 
-double cm[3][3] = {{519.9198295939999, 0.0, 659.1468132131484},
-                   {0.0, 502.46760776515197, 357.57506142772786},
-                   {0.0, 0.0, 1.0}};
-double dc[3][3] = {-0.021303744666207214, -0.006628539603283135, -0.007097678030316164,
-                   0.002559386685475455};
+UsbCameraInterface::UsbCameraInterface() : as2::Node("usb_camera_interface")
+{
+  loadParameters();
 
-UsbCameraInterface::UsbCameraInterface() : as2::Node("usb_camera_interface") {
   std::string ns = this->get_namespace();
-  device_port_ = "/dev/video2";
+  img_transport_ = std::make_shared<as2::sensors::Camera>(camera_name_, this);
 
-  // loadParameters();
-  // setCameraInfo(camera_matrix_, dist_coeffs_);
-  
-  img_transport_ = std::make_shared<as2::sensors::Camera>("camera", this);
+  setCameraInfo(camera_matrix_, dist_coeffs_);
   setupCamera();
 
   // create timer for image capture
@@ -54,12 +47,46 @@ UsbCameraInterface::UsbCameraInterface() : as2::Node("usb_camera_interface") {
       std::chrono::milliseconds(10), std::bind(&UsbCameraInterface::captureImage, this));
 };
 
-void UsbCameraInterface::loadParameters() {
-  camera_matrix_ = cv::Mat(3, 3, CV_64F, &cm);
-  dist_coeffs_ = cv::Mat(1, 5, CV_64F, &dc);
+void UsbCameraInterface::loadParameters()
+{
+  this->declare_parameter("video_device");
+  this->declare_parameter("camera_name");
+  this->declare_parameter("image_width");
+  this->declare_parameter("image_height");
+  this->declare_parameter("framerate");
+  this->declare_parameter("distortion_model");
+  this->declare_parameter("camera_matrix.data");
+  this->declare_parameter("distortion_coefficients.data");
+
+  this->get_parameter("video_device", device_port_);
+  this->get_parameter("camera_name", camera_name_);
+  this->get_parameter("image_width", image_width_);
+  this->get_parameter("image_height", image_height_);
+  this->get_parameter("framerate", framerate_);
+  this->get_parameter("distortion_model", distortion_model_);
+
+  rclcpp::Parameter cm_param = this->get_parameter("camera_matrix.data");
+  rclcpp::Parameter dc_param = this->get_parameter("distortion_coefficients.data");
+
+  std::vector<double> cm_param_vec = cm_param.as_double_array();
+  std::vector<double> dc_param_vec = dc_param.as_double_array();
+
+  camera_matrix_ = cv::Mat(3, 3, CV_64F, cm_param_vec.data()).clone();
+  dist_coeffs_ = cv::Mat(1, dc_param_vec.size(), CV_64F, dc_param_vec.data()).clone();
+
+  RCLCPP_INFO(this->get_logger(), "Video device: %s", device_port_.c_str());
+  RCLCPP_INFO(this->get_logger(), "Camera name: %s", camera_name_.c_str());
+  RCLCPP_INFO(this->get_logger(), "Image width: %d", image_width_);
+  RCLCPP_INFO(this->get_logger(), "Image height: %d", image_height_);
+  RCLCPP_INFO(this->get_logger(), "Framerate: %f", framerate_);
+  RCLCPP_INFO(this->get_logger(), "Distortion model: %s", distortion_model_.c_str());
+
+  std::cout << camera_matrix_ << std::endl;
+  std::cout << dist_coeffs_ << std::endl;
 }
 
-void UsbCameraInterface::setCameraInfo(const cv::Mat &_camera_matrix, const cv::Mat &_dist_coeffs) {
+void UsbCameraInterface::setCameraInfo(const cv::Mat &_camera_matrix, const cv::Mat &_dist_coeffs)
+{
   RCLCPP_INFO(get_logger(), "Setting camera info");
   sensor_msgs::msg::CameraInfo camera_info;
 
@@ -73,34 +100,37 @@ void UsbCameraInterface::setCameraInfo(const cv::Mat &_camera_matrix, const cv::
   camera_info.k[7] = _camera_matrix.at<double>(2, 1);
   camera_info.k[8] = _camera_matrix.at<double>(2, 2);
 
-  camera_info.d.emplace_back(_dist_coeffs.at<double>(0, 0));
-  camera_info.d.emplace_back(_dist_coeffs.at<double>(0, 1));
-  camera_info.d.emplace_back(_dist_coeffs.at<double>(0, 2));
-  camera_info.d.emplace_back(_dist_coeffs.at<double>(0, 3));
-  camera_info.d.emplace_back(_dist_coeffs.at<double>(0, 4));
+  for (int i = 0; i < _dist_coeffs.cols; i++)
+  {
+    camera_info.d.emplace_back(_dist_coeffs.at<double>(0, i));
+  }
 
   img_transport_->setParameters(camera_info);
+
+  RCLCPP_INFO(get_logger(), "Camera info set");
 }
 
-void UsbCameraInterface::setupCamera() {
+void UsbCameraInterface::setupCamera()
+{
   cap_.open(device_port_);
-  if (!cap_.isOpened()) {
+  if (!cap_.isOpened())
+  {
     RCLCPP_ERROR(get_logger(), "Cannot open device");
     return;
   }
 
-  cap_.set(cv::CAP_PROP_FRAME_WIDTH, 1280);
-  // cap_.set(cv::CAP_PROP_FRAME_WIDTH, 640);
-  cap_.set(cv::CAP_PROP_FRAME_HEIGHT, 720);
-  // cap_.set(cv::CAP_PROP_FRAME_HEIGHT, 480);
-  cap_.set(cv::CAP_PROP_FPS, 30);
+  cap_.set(cv::CAP_PROP_FRAME_WIDTH, image_width_);
+  cap_.set(cv::CAP_PROP_FRAME_HEIGHT, image_height_);
+  cap_.set(cv::CAP_PROP_FPS, framerate_);
 }
 
-void UsbCameraInterface::captureImage() {
+void UsbCameraInterface::captureImage()
+{
   // Capture image in device with opencv2
 
   cv::Mat frame;
-  if (!cap_.read(frame)) {
+  if (!cap_.read(frame))
+  {
     RCLCPP_ERROR(get_logger(), "Cannot read image");
     return;
   }
@@ -110,7 +140,7 @@ void UsbCameraInterface::captureImage() {
   sensor_msgs::msg::Image img_msg;
   cv_bridge::CvImage cv_img;
   cv_img.header.frame_id = "camera_link"; // TODO: check tf2 link name
-  cv_img.header.stamp =this->now();
+  cv_img.header.stamp = this->now();
   cv_img.encoding = sensor_msgs::image_encodings::BGR8;
   cv_img.image = frame;
   cv_img.toImageMsg(img_msg);
@@ -120,4 +150,3 @@ void UsbCameraInterface::captureImage() {
 
   // imshow
 }
-
