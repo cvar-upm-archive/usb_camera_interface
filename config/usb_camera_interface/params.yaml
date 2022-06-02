@@ -8,6 +8,7 @@
         image_width: 640
         image_height: 480
         camera_name: "aruco_camera"
+        camera_model: "pinhole"
         # camera_info_url: "config/usb_cam/camera_info.yaml"
         camera_matrix:
             rows: 3

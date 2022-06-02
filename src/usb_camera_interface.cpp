@@ -36,7 +36,6 @@ UsbCameraInterface::UsbCameraInterface() : as2::Node("usb_camera_interface")
 {
   loadParameters();
 
-  std::string ns = this->get_namespace();
   img_transport_ = std::make_shared<as2::sensors::Camera>(camera_name_, this);
 
   setCameraInfo(camera_matrix_, dist_coeffs_);

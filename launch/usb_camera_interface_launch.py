@@ -54,7 +54,6 @@ def generate_launch_description(ns='drone0'):
         Node(
             package='usb_camera_interface',
             executable='usb_camera_interface_node',
-            name='usb_camera_interface',
             namespace=LaunchConfiguration('drone_id'),
             parameters=[config],
             output='screen',
@@ -63,5 +62,5 @@ def generate_launch_description(ns='drone0'):
             #     ("sensor_measurements/camera/image_raw", "camera1/image_raw")]
         ),
 
-        # OpaqueFunction(function=staticTransformNode)
+        OpaqueFunction(function=staticTransformNode)
     ])
