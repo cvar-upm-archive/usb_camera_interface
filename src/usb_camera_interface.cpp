@@ -48,14 +48,14 @@ UsbCameraInterface::UsbCameraInterface() : as2::Node("usb_camera_interface")
 
 void UsbCameraInterface::loadParameters()
 {
-  this->declare_parameter("video_device");
-  this->declare_parameter("camera_name");
-  this->declare_parameter("image_width");
-  this->declare_parameter("image_height");
-  this->declare_parameter("framerate");
-  this->declare_parameter("distortion_model");
-  this->declare_parameter("camera_matrix.data");
-  this->declare_parameter("distortion_coefficients.data");
+  this->declare_parameter<std::string>("video_device");
+  this->declare_parameter<std::string>("camera_name");
+  this->declare_parameter<int>("image_width");
+  this->declare_parameter<int>("image_height");
+  this->declare_parameter<double>("framerate");
+  this->declare_parameter<std::string>("distortion_model");
+  this->declare_parameter<std::vector<double>>("camera_matrix.data");
+  this->declare_parameter<std::vector<double>>("distortion_coefficients.data");
 
   this->get_parameter("video_device", device_port_);
   this->get_parameter("camera_name", camera_name_);
