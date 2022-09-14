@@ -89,6 +89,9 @@ void UsbCameraInterface::setCameraInfo(const cv::Mat &_camera_matrix, const cv::
   RCLCPP_INFO(get_logger(), "Setting camera info");
   sensor_msgs::msg::CameraInfo camera_info;
 
+  camera_info.width = image_width_;
+  camera_info.height = image_height_;
+
   camera_info.k[0] = _camera_matrix.at<double>(0, 0);
   camera_info.k[1] = _camera_matrix.at<double>(0, 1);
   camera_info.k[2] = _camera_matrix.at<double>(0, 2);

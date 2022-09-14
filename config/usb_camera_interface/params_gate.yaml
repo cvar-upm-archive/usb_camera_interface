@@ -5,20 +5,20 @@
         io_method: "mmap"
         frame_id: "camera_link"
         pixel_format: "mjpeg"
-        # image_width: 1280
-        # image_height: 720
+        image_width: 1280
+        image_height: 720
         camera_name: "usb_camera"
         camera_model: "pinhole"
         # camera_info_url: "config/usb_cam/camera_info.yaml"
         camera_matrix:
             rows: 3
             cols: 3
-            data: [694.95934306, 0.000000, 642.99590236, 0.000000, 697.78338843, 376.52641891, 0.000000, 0.000000, 1.000000]
+            data: [552.80141612, 0.000000, 664.85023423, 0.000000, 552.47314061, 341.289129, 0.000000, 0.000000, 1.000000]
         distortion_model: "plumb_bob"
         distortion_coefficients:
             rows: 1
-            cols: 5
-            data: [-0.43606792 , 0.17578458 ,-0.0049836 , 0.00522144, -0.02809072]
+            cols: 14
+            data: [4.13988219e-01 , 1.13740832e-01 ,-1.13772239e-04 , 1.44663244e-04, 1.05624043e-02 , 7.83614366e-01  ,1.77622705e-01 , 4.44862703e-02, 0.00000000e+00 , 0.00000000e+00  ,0.00000000e+00 , 0.00000000e+00, 0.00000000e+00 , 0.00000000e+00]
 
 
       

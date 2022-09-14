@@ -41,7 +41,7 @@ def staticTransformNode(context, *args, **kwargs):
 def generate_launch_description():
     camera_info = PathJoinSubstitution([
         FindPackageShare('usb_camera_interface'),
-        'config/usb_camera_interface', 'new_camera_info.yaml'
+        'config/usb_camera_interface', 'wide03_1080_info.yaml'
     ])
     camera_params = PathJoinSubstitution([
         FindPackageShare('usb_camera_interface'),
