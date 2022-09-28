@@ -1,15 +1,19 @@
 from launch import LaunchDescription
 from launch_ros.actions import Node
 from launch.actions import DeclareLaunchArgument, OpaqueFunction
-from launch.substitutions import LaunchConfiguration, EnvironmentVariable, PathJoinSubstitution
-from launch_ros.substitutions import FindPackageShare
+from launch.substitutions import LaunchConfiguration
+from ament_index_python.packages import get_package_share_directory
+import os
 import yaml
 
 
 def staticTransformNode(context, *args, **kwargs):
-    tf_cam_config = LaunchConfiguration('tf_cam_config').perform(context)
 
-    with open(tf_cam_config, 'r') as config_file:
+    config = os.path.join(get_package_share_directory('usb_camera_interface'),
+                          'config/tf_cam',
+                          'real_arguments.yaml')
+
+    with open(config, 'r') as config_file:
         tf_arguments = yaml.load(config_file, Loader=yaml.FullLoader)
 
     ns = LaunchConfiguration('drone_id').perform(context)
@@ -38,33 +42,24 @@ def staticTransformNode(context, *args, **kwargs):
     return [static_transform_publisher_node]
 
 
-def generate_launch_description():
-    camera_info = PathJoinSubstitution([
-        FindPackageShare('usb_camera_interface'),
-        'config/usb_camera_interface', 'wide03_1080_info.yaml'
-    ])
-    camera_params = PathJoinSubstitution([
-        FindPackageShare('usb_camera_interface'),
-        'config/usb_camera_interface', 'params.yaml'
-    ])
-    tf_cam_config = PathJoinSubstitution([
-        FindPackageShare('usb_camera_interface'),
-        'config/tf_cam', 'real_arguments.yaml'
-    ])
+def generate_launch_description(ns='drone0'):
+
+    config = os.path.join(get_package_share_directory('usb_camera_interface'),
+                          'config/usb_camera_interface',
+                          'params.yaml')
 
     return LaunchDescription([
-        DeclareLaunchArgument('drone_id', default_value=EnvironmentVariable('AEROSTACK2_SIMULATION_DRONE_ID')),
-        DeclareLaunchArgument('camera_info', default_value=camera_info),
-        DeclareLaunchArgument('camera_params', default_value=camera_params),
-        DeclareLaunchArgument('tf_cam_config', default_value=tf_cam_config),
+        DeclareLaunchArgument('drone_id', default_value='drone0'),
         DeclareLaunchArgument('log_level', default_value='info'),
         Node(
             package='usb_camera_interface',
             executable='usb_camera_interface_node',
             namespace=LaunchConfiguration('drone_id'),
-            parameters=[LaunchConfiguration('camera_params'), LaunchConfiguration('camera_info')],
+            parameters=[config],
             output='screen',
             emulate_tty=True,
+            # remappings=[
+            #     ("sensor_measurements/camera/image_raw", "camera1/image_raw")]
         ),
 
         OpaqueFunction(function=staticTransformNode)

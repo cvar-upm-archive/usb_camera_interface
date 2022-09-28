@@ -30,11 +30,10 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  ********************************************************************************/
 
-#include "usb_camera_interface.hpp"
 #include "as2_core/core_functions.hpp"
+#include "usb_camera_interface.hpp"
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
   rclcpp::init(argc, argv);
   auto node = std::make_shared<UsbCameraInterface>();
   node->preset_loop_frequency(30);

@@ -1,11 +1,4 @@
-/*!*******************************************************************************************
- *  \file       usb_camera_interface.hpp
- *  \brief      Aruco gate detector header file.
- *  \authors    David Perez Saura
- *  \copyright  Copyright (c) 2022 Universidad Politécnica de Madrid
- *              All Rights Reserved
- *
- * Redistribution and use in source and binary forms, with or without
+/*!******************************************************************************************* \file       usb_camera_interface.hpp \brief      Aruco gate detector header file. \authors    David Perez Saura \copyright  Copyright (c) 2022 Universidad Politécnica de Madrid All Rights Reserved Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
  * 1. Redistributions of source code must retain the above copyright notice,
@@ -30,8 +23,8 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  ********************************************************************************/
 
-#ifndef ARUCO_GATE_DETECTOR_HPP_
-#define ARUCO_GATE_DETECTOR_HPP_
+#ifndef USB_CAMERA_INTERFACE_HPP_
+#define USB_CAMERA_INTERFACE_HPP_
 
 #include <rclcpp/rclcpp.hpp>
 #include "as2_core/node.hpp"
@@ -57,20 +50,21 @@ class UsbCameraInterface : public as2::Node
 {
 public:
   /**
-   * @brief Construct a new Aruco Gate Detector object
+   * @brief Construct a new UsbCameraInterface object
    */
   UsbCameraInterface();
 
   /**
-   * @brief Destroy the Aruco Gate Detector object
+   * @brief Destroy the UsbCameraInterface object
    */
   ~UsbCameraInterface(){};
 
 private:
-  std::shared_ptr<as2::sensors::Camera> img_transport_;
+  std::shared_ptr<as2::sensors::Camera> camera_;
 
-  std::string device_port_;
   std::string camera_name_;
+  std::string camera_frame_;
+  std::string device_port_;
   int image_width_;
   int image_height_;
   double framerate_;
@@ -85,6 +79,8 @@ private:
   void loadParameters();
   void captureImage();
   void setupCamera();
+  void setCameraTransform();
+  void setCameraModelTransform(const std::string &_camera_flu, const std::string &_camera_rdf);
 };
 
-#endif // ARUCO_GATE_DETECTOR_HPP_
+#endif // USB_CAMERA_INTERFACE_HPP_
