@@ -1,5 +1,8 @@
-/*!******************************************************************************************* \file       usb_camera_interface.hpp \brief      Aruco gate detector header file. \authors    David Perez Saura \copyright  Copyright (c) 2022 Universidad Politécnica de Madrid All Rights Reserved Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
+/*!******************************************************************************************* \file
+ *usb_camera_interface.hpp \brief      Aruco gate detector header file. \authors    David Perez
+ *Saura \copyright  Copyright (c) 2022 Universidad Politécnica de Madrid All Rights Reserved
+ *Redistribution and use in source and binary forms, with or without modification, are permitted
+ *provided that the following conditions are met:
  *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
@@ -27,27 +30,26 @@
 #define USB_CAMERA_INTERFACE_HPP_
 
 #include <rclcpp/rclcpp.hpp>
+#include "as2_core/names/topics.hpp"
 #include "as2_core/node.hpp"
 #include "as2_core/sensor.hpp"
-#include "as2_core/names/topics.hpp"
 
 #include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 #include "nav_msgs/msg/path.hpp"
 #include "sensor_msgs/image_encodings.hpp"
 #include "sensor_msgs/msg/image.hpp"
 
-#include <memory>
-#include <vector>
 #include <cv_bridge/cv_bridge.h>
 #include <image_transport/image_transport.hpp>
+#include <memory>
 #include <opencv2/aruco.hpp>
-#include <opencv2/opencv.hpp>
 #include <opencv2/calib3d.hpp>
-#include <opencv2/imgproc.hpp>
 #include <opencv2/highgui.hpp>
+#include <opencv2/imgproc.hpp>
+#include <opencv2/opencv.hpp>
+#include <vector>
 
-class UsbCameraInterface : public as2::Node
-{
+class UsbCameraInterface : public as2::Node {
 public:
   /**
    * @brief Construct a new UsbCameraInterface object
@@ -83,4 +85,4 @@ private:
   void setCameraModelTransform(const std::string &_camera_flu, const std::string &_camera_rdf);
 };
 
-#endif // USB_CAMERA_INTERFACE_HPP_
+#endif  // USB_CAMERA_INTERFACE_HPP_
