@@ -74,10 +74,12 @@ private:
   cv::Mat camera_matrix_;
   cv::Mat dist_coeffs_;
   std::string distortion_model_;
+  std::string camera_model_;
+  std::string encoding_;
 
   cv::VideoCapture cap_;
 
-  void setCameraInfo(const cv::Mat &_camera_matrix, const cv::Mat &_dist_coeffs);
+  void setCameraParameters(const cv::Mat &_camera_matrix, const cv::Mat &_dist_coeffs);
   void loadParameters();
   void captureImage();
   void setupCamera();
