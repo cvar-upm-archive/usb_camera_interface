@@ -97,7 +97,8 @@ void UsbCameraInterface::loadParameters() {
   encoding_ = sensor_msgs::image_encodings::BGR8;
 }
 
-void UsbCameraInterface::setCameraParameters(const cv::Mat &_camera_matrix, const cv::Mat &_dist_coeffs) {
+void UsbCameraInterface::setCameraParameters(const cv::Mat &_camera_matrix,
+                                             const cv::Mat &_dist_coeffs) {
   RCLCPP_INFO(get_logger(), "Setting camera parameters");
   sensor_msgs::msg::CameraInfo camera_info;
 
@@ -140,9 +141,12 @@ void UsbCameraInterface::setupCamera() {
 }
 
 void UsbCameraInterface::setCameraTransform() {
-  camera_frame_               = camera_name_ + "/camera_link";
+  std::string ns              = this->get_namespace();
   std::string reference_frame = this->get_parameter("reference_frame").as_string();
-  // std::string sensor_frame_id_ = this->get_parameter("sensor_flu_frame").as_string();
+
+  reference_frame = generateTfName(ns, reference_frame);
+  camera_frame_   = generateTfName(get_namespace(), camera_name_) + "/camera_link";
+
   float x     = this->get_parameter("x").as_double();
   float y     = this->get_parameter("y").as_double();
   float z     = this->get_parameter("z").as_double();
@@ -151,7 +155,7 @@ void UsbCameraInterface::setCameraTransform() {
   float yaw   = this->get_parameter("yaw").as_double();
 
   // Camera position in FLU
-  std::string sensor_flu_frame = camera_name_;
+  std::string sensor_flu_frame = generateTfName(ns, camera_name_);
   camera_->setStaticTransform(sensor_flu_frame, reference_frame, x, y, z, roll, pitch, yaw);
 }
 
@@ -173,7 +177,7 @@ void UsbCameraInterface::captureImage() {
   }
   // cv::imshow("frame", frame);
   // cv::waitKey(1);
-  
+
   camera_->updateData(frame);
 
   // // Convert to sensor_msgs::msg::Image
