@@ -144,8 +144,8 @@ void UsbCameraInterface::setCameraTransform() {
   std::string ns              = this->get_namespace();
   std::string reference_frame = this->get_parameter("reference_frame").as_string();
 
-  reference_frame = generateTfName(ns, reference_frame);
-  camera_frame_   = generateTfName(get_namespace(), camera_name_) + "/camera_link";
+  reference_frame = as2::tf::generateTfName(ns, reference_frame);
+  camera_frame_   = as2::tf::generateTfName(get_namespace(), camera_name_) + "/camera_link";
 
   float x     = this->get_parameter("x").as_double();
   float y     = this->get_parameter("y").as_double();
@@ -155,7 +155,7 @@ void UsbCameraInterface::setCameraTransform() {
   float yaw   = this->get_parameter("yaw").as_double();
 
   // Camera position in FLU
-  std::string sensor_flu_frame = generateTfName(ns, camera_name_);
+  std::string sensor_flu_frame = as2::tf::generateTfName(ns, camera_name_);
   camera_->setStaticTransform(sensor_flu_frame, reference_frame, x, y, z, roll, pitch, yaw);
 }
 
